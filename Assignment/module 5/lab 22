@@ -1,0 +1,11 @@
+DELIMITER //
+
+CREATE PROCEDURE GetCourseDetails(IN cid INT)
+BEGIN
+    SELECT course_id, course_name, course_duration
+    FROM courses
+    WHERE course_id = cid;
+END //
+
+DELIMITER ;
+CALL GetCourseDetails(101);

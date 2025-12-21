@@ -1,0 +1,2 @@
+USE school_db;
+DROP TABLE teachers;

@@ -1,0 +1,21 @@
+CREATE TABLE employee_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_id INT,
+    action VARCHAR(50),
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DELIMITER //
+
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log (emp_id, action)
+    VALUES (NEW.emp_id, 'Employee Added');
+END //
+
+DELIMITER ;
+INSERT INTO employees (emp_id, emp_name, dept_id, salary)
+VALUES (104, 'Riya', 1, 52000);
+
+SELECT * FROM employee_log;
