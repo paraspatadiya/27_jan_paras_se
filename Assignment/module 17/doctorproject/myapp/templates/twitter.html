@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Twitter Feed - SkyCast Tools{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <i class="fa-brands fa-twitter" style="font-size: 3.5rem; color: #1d9bf0; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(29, 155, 240, 0.4));"></i>
+        <h2 style="font-size: 2.5rem; font-weight: 800;">Public Social Feed</h2>
+        <p style="color: var(--text-secondary);">Fetch the latest 5 public posts from any user without API keys</p>
+    </div>
+
+    <form method="POST" style="max-width: 600px; margin: 0 auto 50px;">
+        {% csrf_token %}
+        <div style="display: flex; gap: 15px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; border: 1px solid var(--glass-border);">
+            <input type="text" name="username" placeholder="Enter Username (e.g. elonmusk)" required
+                   style="flex: 1; background: transparent; border: none; padding: 15px 25px; color: white; font-size: 1.1rem; outline: none;">
+            <button type="submit" class="btn-primary" style="padding: 0 35px; border-radius: 15px; background: #1d9bf0; color: white;">
+                <i class="fa-solid fa-magnifying-glass"></i> Fetch
+            </button>
+        </div>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div style="padding: 15px; border-radius: 15px; background: rgba(255, 0, 0, 0.1); color: #ff5252; margin-bottom: 30px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.2);">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if tweets %}
+    <div style="display: flex; flex-direction: column; gap: 25px;">
+        {% for tweet in tweets %}
+        <div style="padding: 35px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 30px; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <!-- Background Accent -->
+            <div style="position: absolute; top: -20px; right: -20px; font-size: 8rem; color: rgba(29, 155, 240, 0.05); transform: rotate(-15deg); pointer-events: none;">
+                <i class="fa-brands fa-twitter"></i>
+            </div>
+
+            <p style="font-size: 1.2rem; line-height: 1.8; color: white; position: relative; z-index: 1; margin-bottom: 25px;">
+                {{ tweet.text }}
+            </p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); pt: 20px; margin-top: 10px; font-size: 0.85rem; color: var(--text-secondary);">
+                <span><i class="fa-solid fa-calendar-day"></i> {{ tweet.date }}</span>
+                <a href="{{ tweet.link }}" target="_blank" style="color: #1d9bf0; text-decoration: none; font-weight: 600;">
+                    Read Original <i class="fa-solid fa-external-link" style="font-size: 0.7rem;"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif request.method == 'POST' %}
+    <div style="text-align: center; padding: 60px; color: var(--text-secondary); background: rgba(255,255,255,0.02); border-radius: 30px; border: 1px dashed var(--glass-border);">
+        <i class="fa-solid fa-face-frown" style="font-size: 3rem; margin-bottom: 20px; display: block; opacity: 0.5;"></i>
+        <p>Could not load the feed. The user might be private or the public bridge is currently busy.</p>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 50px; text-align: center; color: var(--text-secondary); font-size: 0.8rem;">
+        <i class="fa-solid fa-shield-halved"></i> Privacy-friendly public feed powered by Nitter RSS bridge (No API Keys Required)
+    </div>
+</div>
+{% endblock %}

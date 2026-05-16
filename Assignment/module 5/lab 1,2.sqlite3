@@ -1,0 +1,7 @@
+    CREATE DATABASE school_db;
+INSERT INTO students (student_name, age, class, address) VALUES
+('paras', 20, 'BSc', 'Ahmedabad'),
+('hardil', 21, 'BScCS', 'Surat'),
+('krupa', 19, 'BCA', 'Vadodara'),
+('krupali', 22, 'MCA', 'Rajkot'),
+('hitesh', 20, 'bcom', 'Gandhinagar');

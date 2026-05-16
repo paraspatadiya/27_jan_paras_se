@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - WriteSphere{% endblock %}
+
+{% block extra_css %}
+.auth-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 50px;
+}
+
+.auth-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-floating > .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-main);
+    border-radius: 12px;
+}
+
+.form-floating > label {
+    color: var(--text-muted);
+}
+
+.form-floating > .form-control:focus {
+    background: #ffffff;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+{% endblock %}
+
+{% block content %}
+<div class="container auth-wrapper">
+    <div class="glass-card auth-card">
+        <h2 class="auth-title">Welcome Back</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-floating mb-3">
+                <input type="text" name="username" class="form-control" id="id_username" placeholder="Username" required>
+                <label for="id_username">Username</label>
+            </div>
+            
+            <div class="form-floating mb-4">
+                <input type="password" name="password" class="form-control" id="id_password" placeholder="Password" required>
+                <label for="id_password">Password</label>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger text-danger py-2 mb-4">
+                <i class="fa fa-exclamation-circle me-2"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-premium w-100 py-3 mb-4">Login to Studio</button>
+            
+            <div class="text-center text-muted">
+                Don't have an account? <a href="{% url 'signup' %}" class="text-accent text-decoration-none fw-bold">Sign Up</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student API</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+            margin:0;
+            padding:0;
+        }
+
+        .navbar{
+            background:black;
+            padding:15px;
+        }
+
+        .navbar a{
+            color:white;
+            text-decoration:none;
+            margin-right:20px;
+            font-size:18px;
+        }
+
+        .container{
+            width:90%;
+            margin:auto;
+            margin-top:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            margin-bottom:40px;
+        }
+
+        table,th,td{
+            border:1px solid gray;
+        }
+
+        th{
+            background:black;
+            color:white;
+            padding:10px;
+        }
+
+        td{
+            padding:10px;
+            text-align:center;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <a href="/">Home</a>
+
+        <a href="/getall/">Get Students</a>
+        <a href="/getid/1/">Get Student ID</a>
+        <a href="/addstudent/">Add Student</a>
+        <a href="/updateid/1/">Update Student</a>
+        <a href="/deleteid/1/">Delete Student</a>
+
+        <a href="/getcourse/">Get Courses</a>
+        <a href="/getcourseid/1/">Get Course ID</a>
+        <a href="/addcourse/">Add Course</a>
+        <a href="/updatecourse/1/">Update Course</a>
+        <a href="/deletecourse/1/">Delete Course</a>
+
+    </div>
+
+    <div class="container">
+
+        <h1>Student Details</h1>
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Course</th>
+            </tr>
+
+            {% for i in data %}
+
+            <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.full_name }}</td>
+                <td>{{ i.email }}</td>
+                <td>{{ i.phone }}</td>
+                <td>{{ i.age }}</td>
+                <td>{{ i.gender }}</td>
+                <td>{{ i.city }}</td>
+                <td>{{ i.address }}</td>
+                <td>{{ i.course.course_name }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+
+        <h1>Course Details</h1>
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Course Name</th>
+                <th>Course Fees</th>
+                <th>Course Duration</th>
+            </tr>
+
+            {% for c in cdata %}
+
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.course_name }}</td>
+                <td>{{ c.course_fees }}</td>
+                <td>{{ c.course_duration }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</body>
+</html>

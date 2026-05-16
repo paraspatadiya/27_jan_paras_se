@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SkyCast Tools{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent: #ffeb3b;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0f172a;
+            color: var(--text-primary);
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        nav.sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            padding: 30px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--glass);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-links a i {
+            width: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background 0.8s ease;
+        }
+
+        .content-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 235, 59, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            nav.sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+            .logo, .nav-links a span { display: none; }
+            main { margin-left: 80px; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    <nav class="sidebar">
+        <div class="logo">SkyCast</div>
+        <ul class="nav-links">
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}"><i class="fa-solid fa-cloud-sun"></i> <span>Weather</span></a></li>
+            <li><a href="/maps/" class="{% if request.path == '/maps/' %}active{% endif %}"><i class="fa-solid fa-location-crosshairs"></i> <span>Geocoding</span></a></li>
+            <li><a href="/distance/" class="{% if request.path == '/distance/' %}active{% endif %}"><i class="fa-solid fa-route"></i> <span>Distance Matrix</span></a></li>
+            <li><a href="/doctor-map/" class="{% if request.path == '/doctor-map/' %}active{% endif %}"><i class="fa-solid fa-user-doctor"></i> <span>Doctor Map</span></a></li>
+            <li><a href="/github/" class="{% if request.path == '/github/' %}active{% endif %}"><i class="fa-brands fa-github"></i> <span>GitHub</span></a></li>
+            <li><a href="/twitter/" class="{% if request.path == '/twitter/' %}active{% endif %}"><i class="fa-brands fa-twitter"></i> <span>Twitter Feed</span></a></li>
+            <li><a href="/countries/" class="{% if request.path == '/countries/' %}active{% endif %}"><i class="fa-solid fa-earth-americas"></i> <span>Countries</span></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>

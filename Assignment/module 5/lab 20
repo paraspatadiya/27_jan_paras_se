@@ -1,0 +1,11 @@
+ALTER TABLE employees ADD salary INT;
+
+UPDATE employees SET salary = 15000 WHERE emp_id = 101;
+UPDATE employees SET salary = 20000 WHERE emp_id = 102;
+UPDATE employees SET salary = 25000 WHERE emp_id = 103;
+
+SELECT departments.dept_name, AVG(employees.salary) AS avg_salary
+FROM employees
+INNER JOIN departments
+ON employees.dept_id = departments.dept_id
+GROUP BY departments.dept_name;

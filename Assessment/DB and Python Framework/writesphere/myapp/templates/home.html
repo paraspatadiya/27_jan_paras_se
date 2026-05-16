@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore - WriteSphere{% endblock %}
+
+{% block extra_css %}
+.filter-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: -60px;
+    position: relative;
+    z-index: 10;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-main);
+    border-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+    background: #ffffff;
+    border-color: var(--accent);
+    color: var(--text-main);
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.blog-image-wrapper {
+    height: 220px;
+    overflow: hidden;
+}
+
+.blog-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+.glass-card:hover .blog-image {
+    transform: scale(1.1);
+}
+
+.category-badge {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.author-avatar {
+    width: 35px;
+    height: 35px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.interaction-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-btn:hover {
+    color: var(--accent);
+}
+
+.stat-btn.active {
+    color: #ef4444;
+}
+
+.follow-btn {
+    font-size: 0.8rem;
+    border-radius: 20px;
+    padding: 4px 15px;
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="container hero-section">
+    <h1 class="hero-title">Discover the Extraordinary</h1>
+    <p class="text-muted fs-5 mb-5 mx-auto" style="max-width: 600px;">
+        Join a community of creative minds. Read, write, and grow with WriteSphere.
+    </p>
+</div>
+
+<!-- Filters -->
+<div class="container mb-5">
+    <div class="filter-card glass-card">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0 text-muted"><i class="fa fa-search"></i></span>
+                    <input type="text" name="author" class="form-control" placeholder="Search Author..." value="{{ request.GET.author }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for c in categories %}
+                    <option value="{{ c.id }}" {% if request.GET.category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="tag" class="form-select">
+                    <option value="">All Tags</option>
+                    {% for t in tags %}
+                    <option value="{{ t.id }}" {% if request.GET.tag == t.id|stringformat:"s" %}selected{% endif %}>{{ t.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                    <span class="input-group-text bg-transparent border-0 text-muted">to</span>
+                    <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-premium w-100">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Blog Grid -->
+<div class="container">
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <div class="blog-image-wrapper">
+                    {% if blog.image %}
+                        <img src="{{ blog.image.url }}" class="blog-image" alt="{{ blog.title }}">
+                    {% else %}
+                        <div class="blog-image bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fa fa-image fa-3x text-white-50"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="p-4 flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="category-badge">{{ blog.category.name }}</span>
+                        <span class="text-muted small"><i class="far fa-clock me-1"></i> {{ blog.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    
+                    <h4 class="mb-3"><a href="{% url 'readblog' blog.id %}" class="text-decoration-none text-dark fw-bold">{{ blog.title }}</a></h4>
+                    
+                    <div class="author-info">
+                        <div class="author-avatar">{{ blog.user.username|make_list|first|upper }}</div>
+                        <div>
+                            <div class="small fw-bold">{{ blog.user.username }}</div>
+                            <div class="text-muted" style="font-size: 0.7rem;">Storyteller</div>
+                        </div>
+                        
+                        {% if user.is_authenticated and user != blog.user %}
+                            {% if blog.user.id in followed_users %}
+                                <a href="{% url 'follow' blog.user.id %}" class="btn btn-outline-danger follow-btn ms-auto">Unfollow</a>
+                            {% else %}
+                                <a href="{% url 'follow' blog.user.id %}" class="btn btn-outline-primary follow-btn ms-auto">Follow</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    <p class="text-muted small mb-4">
+                        {{ blog.content|striptags|truncatewords:15 }}
+                    </p>
+                    
+                    <div class="interaction-bar">
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'like' blog.id %}" class="stat-btn {% if blog.like_set.exists %}active{% endif %}">
+                                <i class="fa-heart {% if blog.like_set.exists %}fa-solid{% else %}fa-regular{% endif %}"></i> {{ blog.like_set.count }}
+                            </a>
+                            <a href="{% url 'readblog' blog.id %}#comments" class="stat-btn">
+                                <i class="fa-regular fa-comment"></i> {{ blog.comment_set.count }}
+                            </a>
+                        </div>
+                        
+                        <a href="{% url 'readblog' blog.id %}" class="btn btn-link btn-sm p-0 text-accent text-decoration-none fw-bold">
+                            Read More <i class="fa fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fa-solid fa-wind fa-4x mb-3 text-muted"></i>
+            <h3 class="text-muted">No stories found yet...</h3>
+            <p class="text-muted">Be the first one to share a new perspective!</p>
+            <a href="{% url 'createblog' %}" class="btn btn-premium mt-3">Start Writing</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

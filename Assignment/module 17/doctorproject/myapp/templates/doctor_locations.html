@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctor Map - SkyCast Tools{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <i class="fa-solid fa-user-md" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.3));"></i>
+        <h2 style="font-size: 2.5rem; font-weight: 800;">Real Doctor Finder</h2>
+        <p style="color: var(--text-secondary);">Find real clinics and hospitals instantly in your city</p>
+    </div>
+
+    <form method="GET" style="max-width: 600px; margin: 0 auto;">
+        <div class="form-group" style="margin-bottom: 30px;">
+            <label style="font-size: 0.9rem; letter-spacing: 1px;">CITY NAME</label>
+            <input type="text" name="city" placeholder="e.g. Ahmedabad" required
+                   style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px 25px; font-size: 1.1rem;">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; font-size: 1.2rem; border-radius: 20px;">
+            <i class="fa-solid fa-street-view"></i> Search Doctors on Google Maps
+        </button>
+    </form>
+
+    <div style="margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="padding: 25px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--glass-border);">
+            <i class="fa-solid fa-gauge-high" style="color: var(--accent); font-size: 1.5rem; margin-bottom: 15px;"></i>
+            <h4>High Speed</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">Bypasses database queries for instant results.</p>
+        </div>
+        <div style="padding: 25px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--glass-border);">
+            <i class="fa-solid fa-map-marked-alt" style="color: var(--accent); font-size: 1.5rem; margin-bottom: 15px;"></i>
+            <h4>Real-Time Data</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">Uses Google's live database for the latest doctor info.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

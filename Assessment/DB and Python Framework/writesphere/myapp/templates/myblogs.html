@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}My Studio - WriteSphere{% endblock %}
+
+{% block extra_css %}
+.studio-header {
+    margin-bottom: 50px;
+}
+
+.table-glass {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.table {
+    color: var(--text-main);
+    margin-bottom: 0;
+}
+
+.table th {
+    background: rgba(248, 250, 252, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.table td {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
+}
+
+.blog-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    transition: 0.3s;
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.category-badge {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="studio-header d-flex justify-content-between align-items-end">
+        <div>
+            <h1 class="fw-bold mb-1">My Studio</h1>
+            <p class="text-muted">Manage your stories and track your influence.</p>
+        </div>
+        <a href="{% url 'createblog' %}" class="btn btn-premium">
+            <i class="fa fa-plus me-2"></i> New Story
+        </a>
+    </div>
+
+    <div class="table-glass">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Story</th>
+                        <th>Category</th>
+                        <th>Stats</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for blog in blogs %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                {% if blog.image %}
+                                    <img src="{{ blog.image.url }}" class="blog-thumb">
+                                {% else %}
+                                    <div class="blog-thumb bg-secondary d-flex align-items-center justify-content-center">
+                                        <i class="fa fa-image text-white-50"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="fw-bold">{{ blog.title|truncatechars:40 }}</div>
+                            </div>
+                        </td>
+                        <td><span class="category-badge">{{ blog.category.name }}</span></td>
+                        <td>
+                            <div class="text-muted small">
+                                <i class="fa fa-heart text-danger me-1"></i> {{ blog.like_set.count }} 
+                                <i class="fa fa-comment text-accent ms-3 me-1"></i> {{ blog.comment_set.count }}
+                            </div>
+                        </td>
+                        <td class="text-muted small">{{ blog.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'readblog' blog.id %}" class="action-btn bg-info bg-opacity-10 text-info" title="View">
+                                <i class="fa fa-eye"></i>
+                            </a>
+
+                            <a href="{% url 'editblog' blog.id %}" class="action-btn bg-warning bg-opacity-10 text-warning" title="Edit">
+                                <i class="fa fa-pen"></i>
+                            </a>
+                            <a href="{% url 'deleteblog' blog.id %}" class="action-btn bg-danger bg-opacity-10 text-danger" title="Delete" 
+                               onclick="return confirm('Are you sure you want to delete this story?')">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-folder-open fa-3x mb-3 d-block"></i>
+                            Your studio is empty. Time to write your first masterpiece!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

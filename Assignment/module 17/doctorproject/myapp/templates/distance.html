@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Distance Matrix - SkyCast Tools{% endblock %}
+
+{% block content %}
+<div class="content-card" style="max-width: 600px;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <i class="fa-solid fa-route" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.3));"></i>
+        <h2 style="font-size: 2.5rem; font-weight: 800;">Google Distance Matrix</h2>
+        <p style="color: var(--text-secondary);">Calculate precise distance and routes instantly on Google Maps</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label style="font-size: 0.8rem; letter-spacing: 1px; color: var(--accent);">ORIGIN</label>
+            <input type="text" name="origin" placeholder="e.g. New York, NY" required
+                   style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 18px 25px;">
+        </div>
+        <div class="form-group">
+            <label style="font-size: 0.8rem; letter-spacing: 1px; color: var(--accent);">DESTINATION</label>
+            <input type="text" name="destination" placeholder="e.g. Los Angeles, CA" required
+                   style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 18px 25px;">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 18px; font-size: 1.1rem;">
+            <i class="fa-solid fa-directions"></i> Get Distance on Google Maps
+        </button>
+    </form>
+
+    <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 25px; border: 1px dashed var(--glass-border); text-align: center;">
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            <i class="fa-solid fa-bolt" style="color: var(--accent);"></i> 
+            This tool performs an <strong>instant redirect</strong> to Google Maps Directions for the most accurate and fastest route information.
+        </p>
+    </div>
+</div>
+{% endblock %}

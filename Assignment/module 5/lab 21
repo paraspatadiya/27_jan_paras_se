@@ -1,0 +1,10 @@
+DELIMITER //
+CREATE PROCEDURE GetEmployeesByDept(IN dept INT)
+BEGIN
+    SELECT emp_id, emp_name, salary
+    FROM employees
+    WHERE dept_id = dept;
+END //
+
+DELIMITER ;
+CALL GetEmployeesByDept(2); 

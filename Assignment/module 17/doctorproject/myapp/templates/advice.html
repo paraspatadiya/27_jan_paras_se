@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Quick Advice - SkyCast Tools{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <i class="fa-solid fa-lightbulb" style="font-size: 3rem; color: #ffeb3b; margin-bottom: 20px;"></i>
+        <h2>Smart Advice Tool</h2>
+        <p style="color: var(--text-secondary);">Get a quick, helpful advice with just one click</p>
+    </div>
+
+    <form method="POST" style="text-align: center;">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary" style="padding: 15px 50px;">
+            <i class="fa-solid fa-bolt"></i> Get Advice Now
+        </button>
+    </form>
+
+    {% if advice %}
+    <div style="margin-top: 50px; padding: 40px; background: rgba(255, 235, 59, 0.05); border: 1px solid rgba(255, 235, 59, 0.2); border-radius: 30px; text-align: center; animation: slideIn 0.5s ease-out;">
+        <i class="fa-solid fa-quote-left" style="font-size: 2rem; color: #ffeb3b; opacity: 0.3; display: block; margin-bottom: 20px;"></i>
+        <p style="font-size: 1.8rem; font-weight: 600; line-height: 1.4;">"{{ advice }}"</p>
+        <i class="fa-solid fa-quote-right" style="font-size: 2rem; color: #ffeb3b; opacity: 0.3; display: block; margin-top: 20px; float: right;"></i>
+        <div style="clear: both;"></div>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 40px; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+        Powered by Advice Slip API (Free & Quick Response)
+    </div>
+</div>
+
+<style>
+    @keyframes slideIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+{% endblock %}

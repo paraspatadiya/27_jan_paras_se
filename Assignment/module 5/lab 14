@@ -1,0 +1,1 @@
+UPDATE courses SET course_duration = '4 Years' WHERE course_id = 101;

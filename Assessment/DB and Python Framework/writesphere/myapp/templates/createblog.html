@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Story - WriteSphere{% endblock %}
+
+{% block extra_css %}
+.create-card {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+.ql-container {
+    height: 400px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ql-toolbar {
+    background: rgba(248, 250, 252, 0.9);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ql-stroke {
+    stroke: var(--text-main) !important;
+}
+
+.ql-fill {
+    fill: var(--text-main) !important;
+}
+
+.ql-picker {
+    color: var(--text-main) !important;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.image-preview:hover {
+    border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="glass-card create-card">
+        <h2 class="mb-4 fw-bold"><i class="fa-solid fa-pen-nib me-2 text-accent"></i> Craft Your Story</h2>
+        
+        <form method="POST" enctype="multipart/form-data" id="blogForm">
+            {% csrf_token %}
+            
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <label class="form-label">Story Title</label>
+                    <input type="text" name="title" class="form-control form-control-lg text-dark" style="background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.1);"
+                           placeholder="Enter a captivating title..." required>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select class="form-select text-dark" style="background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.1);" name="category" id="category" required>
+                        <option selected disabled value="">Select Category</option>
+                        {% for c in categories %}
+                            <option value="{{ c.id }}">{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Tag</label>
+                    <select class="form-select text-dark" style="background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.1);" name="tag" id="tag" required>
+                        <option selected disabled value="">Select Tag</option>
+                        {% for t in tags %}
+                            <option value="{{ t.id }}" data-category="{{ t.category.id }}">{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Cover Image</label>
+                <div class="image-preview" onclick="document.getElementById('imageInput').click()">
+                    <div id="previewPlaceholder">
+                        <i class="fa fa-cloud-upload fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0 text-muted">Click to upload cover image</p>
+                    </div>
+                    <img id="imagePreview" src="#" alt="Preview" style="display: none;">
+                </div>
+                <input type="file" name="image" id="imageInput" class="d-none" accept="image/*" onchange="previewImage(this)">
+            </div>
+
+            <div class="mb-5">
+                <label class="form-label">Story Content</label>
+                <div id="editor"></div>
+                <input type="hidden" name="content" id="contentInput">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'home' %}" class="text-muted text-decoration-none">Discard Draft</a>
+                <button type="submit" class="btn btn-premium px-5">Publish Story</button>
+            </div>
+            
+            {% if msg %}
+            <div class="alert alert-danger mt-4">{{ msg }}</div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize Quill editor
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Tell your story...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        }
+    });
+
+    // Handle form submission
+    var form = document.getElementById('blogForm');
+    form.onsubmit = function() {
+        var content = document.querySelector('input[name=content]');
+        content.value = quill.root.innerHTML;
+        return true;
+    };
+
+    // Image preview
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('previewPlaceholder').style.display = 'none';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Dynamic Tags
+    const categorySelect = document.getElementById('category');
+    const tagSelect = document.getElementById('tag');
+    const allTags = Array.from(tagSelect.options).slice(1);
+
+    categorySelect.addEventListener('change', function(){
+        const selectedCat = this.value;
+        tagSelect.innerHTML = '<option selected disabled value="">Select Tag</option>';
+        allTags.forEach(option => {
+            if(option.dataset.category === selectedCat){
+                tagSelect.appendChild(option.cloneNode(true));
+            }
+        });
+    });
+</script>
+{% endblock %}

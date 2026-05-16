@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Country Details - SkyCast Tools{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <i class="fa-solid fa-earth-africa" style="font-size: 3rem; color: #4caf50; margin-bottom: 20px;"></i>
+        <h2>Global Explorer</h2>
+        <p style="color: var(--text-secondary);">Get detailed information about any country in the world</p>
+    </div>
+
+    <form method="POST" style="max-width: 500px; margin: 0 auto 40px;">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="country_name" placeholder="Enter Country Name (e.g. India)" required>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; background: #4caf50; color: white;">Get Details</button>
+    </form>
+
+    {% if country %}
+    <div style="background: rgba(255,255,255,0.05); border-radius: 25px; padding: 40px; border: 1px solid var(--glass-border);">
+        <div style="display: flex; align-items: center; gap: 30px; margin-bottom: 30px;">
+            <img src="{{ country.flag }}" alt="Flag" style="width: 100px; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+            <div>
+                <h2 style="font-size: 2.5rem;">{{ country.name }}</h2>
+                <p style="color: var(--accent);">Capital: {{ country.capital }}</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Population</p>
+                <p style="font-size: 1.2rem; font-weight: 700;">{{ country.population|floatformat:0 }}</p>
+            </div>
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Languages</p>
+                <p style="font-size: 1.2rem; font-weight: 700;">{{ country.languages }}</p>
+            </div>
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Currency</p>
+                <p style="font-size: 1.2rem; font-weight: 700;">{{ country.currencies }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

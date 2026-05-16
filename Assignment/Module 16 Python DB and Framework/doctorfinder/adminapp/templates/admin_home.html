@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | DoctorFinder</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #2d3436;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .welcome-header {
+            padding: 50px 0 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .welcome-header h2 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Dashboard Cards */
+        .card-admin {
+            background: var(--glass-bg);
+            border: none;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .card-admin:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Icon Colors */
+        .bg-add { background: rgba(10, 189, 227, 0.1); color: #0abde3; }
+        .bg-manage { background: rgba(255, 159, 67, 0.1); color: #ff9f43; }
+        .bg-site { background: rgba(84, 160, 255, 0.1); color: #54a0ff; }
+
+        .card-title {
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+        /* Button Styling */
+        .btn-dash {
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+
+        .btn-gradient:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-outline-dash {
+            border: 2px solid #636e72;
+            color: #636e72;
+        }
+
+        .btn-outline-dash:hover {
+            background: #636e72;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark shadow-sm">
+        <div class="container">
+            <span class="navbar-brand fw-bold">
+                <i class="fa fa-user-shield text-info me-2"></i>DoctorFinder Admin
+            </span>
+            <a href="/adminapp/admin-logout/" class="btn btn-outline-danger btn-sm px-4 rounded-pill">
+                <i class="fa fa-power-off me-2"></i>Logout
+            </a>
+        </div>
+    </nav>
+
+    <div class="container welcome-header">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2>Control Panel</h2>
+                <p class="opacity-75">Platform management and medical registry overview</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row g-4 justify-content-center">
+
+            <div class="col-md-4">
+                <div class="card card-admin p-4 text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-add">
+                            <i class="fa fa-user-plus"></i>
+                        </div>
+                        <h5 class="card-title">Add Doctor</h5>
+                        <p class="card-text text-muted mb-4">Register new medical professionals into the central database.</p>
+                        <a href="/adminapp/add-doctor/" class="btn btn-dash btn-gradient w-100">
+                            Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-admin p-4 text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-manage">
+                            <i class="fa fa-hospital-user"></i>
+                        </div>
+                        <h5 class="card-title">Manage Doctors</h5>
+                        <p class="card-text text-muted mb-4">Review, update details, or remove doctors from the platform.</p>
+                        <a href="/adminapp/view-doctors/" class="btn btn-dash btn-gradient w-100">
+                            View Registry
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-admin p-4 text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-site">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <h5 class="card-title">User Website</h5>
+                        <p class="card-text text-muted mb-4">Exit the admin panel and preview the patient-side application.</p>
+                        <a href="/" class="btn btn-dash btn-outline-dash w-100">
+                            View Live Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <p class="text-center text-white-50 small mt-auto pb-4">
+        © 2026 DoctorFinder Admin Dashboard • System Version 2.4.0
+    </p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

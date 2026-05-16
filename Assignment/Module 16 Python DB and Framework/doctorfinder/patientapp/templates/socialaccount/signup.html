@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Social Signup | DoctorFinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-white: rgba(255, 255, 255, 0.95);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        .auth-header {
+            text-align: center;
+            padding: 40px 30px 10px;
+        }
+        .brand-logo {
+            font-size: 2.5rem;
+            color: #4834d4;
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .form-control {
+            border-radius: 15px;
+            padding: 12px;
+            border: 2px solid #eee;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .btn-signup {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: 700;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.2);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="brand-logo">
+            <i class="fa fa-user-check"></i>
+        </div>
+        <h2 class="fw-bold">Almost There!</h2>
+        <p class="text-muted small">You are signing up with your social account</p>
+    </div>
+
+    <div class="card-body p-4 p-md-5 pt-0">
+        {% load i18n %}
+        <p class="mb-4 text-center">
+            {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to {{site_name}}. As a final step, please provide a username.{% endblocktrans %}
+        </p>
+
+        <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <button class="btn btn-signup" type="submit">
+                Complete Registration <i class="fa fa-check-circle ms-2"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Style the injected inputs
+    document.querySelectorAll('input').forEach(input => {
+        input.classList.add('form-control');
+    });
+</script>
+
+</body>
+</html>

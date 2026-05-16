@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ blog.title }} - WriteSphere{% endblock %}
+
+{% block extra_css %}
+.blog-header {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.blog-meta {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.cover-image-container {
+    width: 100%;
+    max-height: 500px;
+    overflow: hidden;
+    border-radius: 30px;
+    margin-bottom: 50px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.blog-body {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-main);
+}
+
+.blog-body h1, .blog-body h2, .blog-body h3 {
+    color: var(--text-main);
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.blog-body blockquote {
+    border-left: 4px solid var(--accent);
+    padding-left: 20px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 30px 0;
+}
+
+.comment-section {
+    max-width: 800px;
+    margin: 80px auto 0;
+    padding-top: 50px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-form-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-card {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 25px 0;
+    display: flex;
+    gap: 20px;
+}
+
+.comment-user-avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex-grow: 1;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.author-sidebar {
+    position: sticky;
+    top: 100px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <header class="blog-header">
+                <div class="mb-3">
+                    <span class="category-badge">{{ blog.category.name }}</span>
+                    {% if blog.tag %}
+                    <span class="text-muted ms-2"><i class="fa fa-hashtag small"></i> {{ blog.tag.name }}</span>
+                    {% endif %}
+                </div>
+                <h1 class="display-4 fw-bold mb-4">{{ blog.title }}</h1>
+                
+                <div class="blog-meta">
+                    <span><i class="fa-regular fa-user me-2"></i> {{ blog.user.username }}</span>
+                    <span><i class="fa-regular fa-calendar me-2"></i> {{ blog.created_at|date:"F d, Y" }}</span>
+                    <span><i class="fa-regular fa-clock me-2"></i> 5 min read</span>
+                </div>
+            </header>
+
+            {% if blog.image %}
+            <div class="cover-image-container">
+                <img src="{{ blog.image.url }}" class="cover-image" alt="{{ blog.title }}">
+            </div>
+            {% endif %}
+
+            <article class="blog-body mb-5">
+                {{ blog.content|safe }}
+            </article>
+
+            <!-- Interaction Bar -->
+            <div class="d-flex justify-content-center gap-4 py-5 border-top border-bottom border-secondary border-opacity-10">
+                <a href="{% url 'like' blog.id %}" class="btn btn-outline-dark rounded-pill px-4">
+                    <i class="fa-heart {% if user.is_authenticated and blog.like_set.exists %}fa-solid text-danger{% else %}fa-regular{% endif %} me-2"></i> 
+                    {{ blog.like_set.count }} Likes
+                </a>
+                <button class="btn btn-outline-dark rounded-pill px-4" onclick="document.getElementById('comment-input').focus()">
+                    <i class="fa-regular fa-comment me-2"></i> {{ blog.comment_set.count }} Comments
+                </button>
+                <button class="btn btn-outline-dark rounded-pill px-4" onclick="window.print()">
+                    <i class="fa-solid fa-print me-2"></i> Print
+                </button>
+            </div>
+
+            <!-- Comment Section -->
+            <section class="comment-section" id="comments">
+                <h3 class="fw-bold mb-4">Conversations ({{ blog.comment_set.count }})</h3>
+                
+                {% if user.is_authenticated %}
+                <div class="comment-form-card">
+                    <form method="POST" action="{% url 'comment' blog.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <textarea name="text" id="comment-input" class="form-control" 
+                                      rows="3" placeholder="Share your thoughts..." required style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); color: var(--text-main);"></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-premium px-4">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+                {% else %}
+                <div class="alert alert-secondary text-center mb-5">
+                    Please <a href="{% url 'login' %}" class="text-accent">login</a> to participate in the conversation.
+                </div>
+                {% endif %}
+
+                <div class="comment-list">
+                    {% for comment in comments %}
+                    <div class="comment-card">
+                        <div class="comment-user-avatar">{{ comment.user.username|make_list|first|upper }}</div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="fw-bold text-dark">{{ comment.user.username }}</span>
+                                <span class="text-muted small">{{ comment.created_at|timesince }} ago</span>
+                            </div>
+                            <p class="text-muted mb-2">{{ comment.text }}</p>
+                            
+                            {% if user.is_authenticated %}
+                                {% if comment.user == user or blog.user == user or user.is_superuser %}
+                                <div class="mt-2">
+                                    {% if comment.user == user or user.is_superuser %}
+                                    <a href="{% url 'editcomment' comment.id %}" class="text-accent small text-decoration-none me-3">
+                                        <i class="fa fa-pen me-1"></i> Edit
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'deletecomment' comment.id %}" class="text-danger small text-decoration-none">
+                                        <i class="fa fa-trash-can me-1"></i> Delete
+                                    </a>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4 text-muted">
+                        No comments yet. Start the conversation!
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <div class="text-center mt-5 mb-5">
+                <a href="{% url 'home' %}" class="btn btn-outline-dark rounded-pill px-5">
+                    <i class="fa fa-arrow-left me-2"></i> Back to Explore
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
